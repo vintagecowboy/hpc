@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Task Version="3.000" Name="QueuePubSubMsg" CommandLine="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp; Publish-GcpsMessage -Data 'Job ID: %CCP_JOBID%' -Topic 'hpc-topic'&quot;" WorkDirectory="C:\" MinCores="1" MaxCores="1" Type="Basic" xmlns="http://schemas.microsoft.com/HPCS2008R2/scheduler/" />

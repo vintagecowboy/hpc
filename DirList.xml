@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Task Version="3.000" Name="DirList" CommandLine="dir /s /b /o:gn" WorkDirectory="C:\" MinCores="1" MaxCores="1" Type="Basic" xmlns="http://schemas.microsoft.com/HPCS2008R2/scheduler/" />

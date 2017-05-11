@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Job Version="3.000" Id="14" State="Configuring" CreateTime="5/10/2017 2:12:13 PM" Name="TestJob" IsExclusive="false" RunUntilCanceled="false" UnitType="Core" RuntimeSeconds="300" Owner="HPC\johndoe" UserName="" Project="" JobType="Batch" JobTemplate="Test Template" Priority="Lowest" NodeGroups="" OrderBy="" RequeueCount="0" AutoRequeueCount="0" PendingReason="None" AutoCalculateMax="true" AutoCalculateMin="true" FailOnTaskFailure="false" Progress="0" ProgressMessage="" MinCores="1" MaxCores="1" NotifyOnStart="false" NotifyOnCompletion="false" JobValidExitCodes="" ParentJobIds="" EstimatedProcessMemory="0" TaskExecutionFailureRetryLimit="0" xmlns="http://schemas.microsoft.com/HPCS2008R2/scheduler/">
+    <Dependencies>
+        <Parent GroupId="32">
+            <Child GroupId="33" />
+        </Parent>
+        <Parent GroupId="33">
+            <Child GroupId="34" />
+        </Parent>
+        <Parent GroupId="34">
+            <Child GroupId="35" />
+        </Parent>
+    </Dependencies>
+    <Tasks>
+        <Task Version="3.000" Id="24" ParentJobId="14" State="Configuring" UnitType="Core" WorkDirectory="C:\" NiceId="1" CommandLine="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp; Publish-GcpsMessage -Data 'Job ID: %CCP_JOBID%' -Topic 'hpc-topic'&quot;" RequeueCount="0" PendingReason="None" StartValue="0" EndValue="0" IncrementValue="1" GroupId="33" CreateTime="5/10/2017 2:12:13 PM" Name="QueuePubSubMsg" MinCores="1" MaxCores="1" AutoRequeueCount="0" Type="Basic" FailJobOnFailure="false" />
+        <Task Version="3.000" Id="25" ParentJobId="14" State="Configuring" UnitType="Core" WorkDirectory="C:\" NiceId="2" CommandLine="dir /s /b /o:gn" RequeueCount="0" PendingReason="None" StartValue="0" EndValue="0" IncrementValue="1" GroupId="34" CreateTime="5/10/2017 2:12:13 PM" Name="DirList" MinCores="1" MaxCores="1" AutoRequeueCount="0" Type="Basic" FailJobOnFailure="false" />
+        <Task Version="3.000" Id="26" ParentJobId="14" State="Configuring" UnitType="Core" WorkDirectory="C:\" NiceId="3" CommandLine="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp; Get-GcpsMessage -Subscription 'hpc-pull' -AutoAck&quot;" RequeueCount="0" PendingReason="None" StartValue="0" EndValue="0" IncrementValue="1" GroupId="35" CreateTime="5/10/2017 2:12:13 PM" Name="DequeuePubSubMsg" MinCores="1" MaxCores="1" AutoRequeueCount="0" Type="Basic" FailJobOnFailure="false" TaskValidExitCodes="" />
+    </Tasks>
+</Job>
