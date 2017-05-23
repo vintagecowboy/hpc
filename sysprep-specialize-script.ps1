@@ -1,29 +1,29 @@
 ############################################################
+
 ## Title: Example start-up / sysprep script for HPC workers
-## Author: richradley:google.com
+## Author: richradley@google.com
 ## Date: 09-May-2017
 ############################################################
+Add-PSSnapIn Microsoft.HPC
 
-$domain = "hpc.rich-lab.com"
+$domain = "[domain]"
+$computer_name = [System.Net.Dns]::GetHostName()
+$domain_user = "johndoe"
+$domain_username = "$domain\$domain_user"
+$domain_pass = "[pwd]"
+$secpass = $domain_pass|ConvertTo-SecureString -AsPlainText -Force
+$domain_cred = New-Object System.Management.Automation.PSCredential $domain_username,$secpass
 
-$user = "johndoe"
-$username = "$domain\$user"
-$password = "[pwd]"
-$secpass=$password|ConvertTo-SecureString -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential $username,$secpass
-
-# Set allowed ASCII character codes to Uppercase letters (65..90),
-$charcodes = 65..90
-
-# Convert allowed character codes to characters
-$allowedChars = $charcodes | ForEach-Object { [char][byte]$_ }
-
-$LengthOfName = 10
-# Generate computer name
-# $host = Get-GceMetadata -Path "instance/name"
-$host = ($allowedChars | Get-Random -Count $LengthOfName) -join ""
+$hostname = Get-GceMetadata -Path "instance/name"
+$netbiosname = $hostname -replace '-',''
 
 Set-DnsClientServerAddress -InterfaceAlias Ethernet -ServerAddresses "10.1.1.1"
-Add-Computer -DomainName $domain -Credential $credential
-Rename-Computer -NewName $host -DomainCredential $credential -Force
-Restart-Compute
+
+if ($computer_name -ne $netbiosname) {
+   # Perform the rename with appropriate credentials and restart the computer.
+   Rename-Computer -NewName $netbiosname -DomainCredential $domain_cred -Force -PassThru
+   Add-Computer -DomainName $domain -Credential $domain_cred -NewName $netbiosname -Force -Restart
+}
+
+Get-HpcNode -HealthState Unapproved -Name $netbiosname | Assign-HpcNodeTemplate -Name "Default ComputeNode Template" -Async -confirm:$False
+Get-HpcNode -State Offline -Name $netbiosname | Set-HpcNodestate -State online
